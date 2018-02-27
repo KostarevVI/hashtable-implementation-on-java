@@ -17,4 +17,10 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>tester1</id>
+            <url>https://github.com/KostarevVI/tester1</url>
+        </repository>
+    </repositories>
 </project>
