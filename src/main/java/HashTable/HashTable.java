@@ -22,7 +22,7 @@ public class HashTable {
         if (table[hash] == null) {
             table[hash] = cell;
         } else {
-            System.out.println("Такой элемент уже есть!");
+            System.out.println("Такой элемент уже есть");
         }
     }
 
