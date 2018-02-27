@@ -46,7 +46,7 @@ public class HashTable {
         int hash = hash(key);
         while (table[hash] != null) {
             if (table[hash].getKey() == key) {
-                System.out.println("Нашёл!");
+                System.out.println("Нашёл");
                 return table[hash];
             }
             hash++;

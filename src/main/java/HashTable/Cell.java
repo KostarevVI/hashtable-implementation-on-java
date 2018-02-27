@@ -8,7 +8,7 @@ public class Cell {
     }
 
     public int getKey() {
-        return key;
+        return key;//
     }
     //public void remove()
 }
