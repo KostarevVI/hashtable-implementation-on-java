@@ -19,11 +19,12 @@ public class HashTable {
     public void push(int key) {
         Cell cell = new Cell(key);
         int hash = hash(key);
-        if (table[hash] == null) {
-            table[hash] = cell;
-        } else {
-            System.out.println("Такой элемент уже есть");
+        while (table[hash] != null)  //решение коллизий методом линейного пробирования
+        {
+            hash++;
+            hash %= size;
         }
+        table[hash] = cell;
     }
 
     public void delete(int key) {
@@ -42,32 +43,25 @@ public class HashTable {
                 System.out.println(i + " " + table[i].getKey());
     }
 
-    public Cell find(int key) {
+    public Integer find(int key) {
         int hash = hash(key);
         while (table[hash] != null) {
             if (table[hash].getKey() == key) {
                 System.out.println("Нашёл");
-                return table[hash];
+                return hash;
+                //return table[hash];
             }
             hash++;
             hash = hash % size;
         }
         System.out.println("Не нашёл по ходу");
         return null;
+        //return null;
     }
 
-    public boolean hashEquals(HashTable otherTable) {
-        if (this.size != otherTable.size) {
-            System.out.println("Таблицы не равны");
-            return false;
-        }
-        for (int i = 0; i < this.size; i++)
-            if (!this.table[i].equals(otherTable.table[i])) {
-                System.out.println("Таблицы не равны");
-                return false;
-            }
-        System.out.println("Таблицы равны");
-        return true;
+    public boolean hashEquals(Cell otherCell) {
+        int hash = hash(otherCell.getKey());
+        return this.find(otherCell.getKey()) == otherCell.getKey() && this.table[hash].getKey() == otherCell.getKey();
     }
 }
 
