@@ -17,8 +17,8 @@ public class HashTable {
     }
 
     public void push(int key) {
-        Cell cell = new Cell(key);
         int hash = hash(key);
+        Cell cell = new Cell(key, hash);
         while (table[hash] != null)  //решение коллизий методом линейного пробирования
         {
             hash++;
@@ -29,12 +29,25 @@ public class HashTable {
 
     public void delete(int key) {
         int hash = hash(key);
-        if (find(key) != null) {
+        if (find(key)) {
             table[hash] = null;
             System.out.println("Удалил");
         } else {
             System.out.println("Удалять нечего");
         }
+    }
+
+    public Boolean find(int key) {
+        int hash = hash(key);
+        if (table[hash].getKey() == key) {
+            return true;
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (table[i].getKey() == key)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public void print() {
@@ -43,7 +56,26 @@ public class HashTable {
                 System.out.println(i + " " + table[i].getKey());
     }
 
-    public Integer find(int key) {
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            table[i] = null;
+        }
+        System.out.println("Таблица очищена");
+    }
+
+    public Boolean isThisEmpty() {
+        int counter = 0;
+        boolean flag = true;
+        while (flag && table.length > counter) {
+            if (table[counter] != null)
+                flag = false;
+            counter++;
+        }
+        return flag;
+    }
+
+/*
+    public Integer getHash(int key) {
         int hash = hash(key);
         while (table[hash] != null) {
             if (table[hash].getKey() == key) {
@@ -58,11 +90,7 @@ public class HashTable {
         return null;
         //return null;
     }
-
-    public boolean hashEquals(Cell otherCell) {
-        int hash = hash(otherCell.getKey());
-        return this.find(otherCell.getKey()) == otherCell.getKey() && this.table[hash].getKey() == otherCell.getKey();
-    }
+*/
 }
 
 
