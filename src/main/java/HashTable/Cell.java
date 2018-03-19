@@ -1,23 +1,32 @@
 package HashTable;
 
-public class Cell {
-    private int key;
-    private int hash;
+import com.sun.istack.internal.Nullable;
 
-    public Cell(int key, int hash) {
+public class Cell {
+    @Nullable
+    private Integer key;
+    @Nullable
+    private Integer hash;
+
+    public Cell(Integer key, Integer hash) {
         this.key = key;
         this.hash = hash;
     }
 
-    public int getKey() {
+    public Integer getKey() {
         return key;
     }
 
-    public int getHash() {
+    public Integer getHash() {
         return hash;
     }
 
-    public boolean hashEquals(Cell otherCell) {
-        return this.getHash() == otherCell.getHash() && this.getKey() == otherCell.getKey();
+    public boolean cellEquals(Cell otherCell) {
+        //if(this.getKey() != null && this.getHash() != null && otherCell.getHash() != null && otherCell.getKey() != null){
+        if (this.getHash().equals(otherCell.getHash()) && this.getKey().equals(otherCell.getKey())) {
+            return true;
+        }
+        //}
+        return false;
     }
 }
