@@ -9,10 +9,9 @@ public class HashTable {
     private int size;
 
     public HashTable(int size) {
+        this.size = size;
         List<List<Cell>> buckets = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            buckets = insertLists(buckets, size);
-        }
+        this.buckets = insertLists(buckets, size);
     }
 
     private List<List<Cell>> insertLists(List<List<Cell>> newBucket, int size) {
@@ -22,7 +21,8 @@ public class HashTable {
         return newBucket;
     }
 
-    private int hash(int key) {
+    private int hash(Integer a) {
+        int key = a.hashCode();
         int hash = 0;
         for (int i = 0; i < String.valueOf(key).length(); i++)
             hash = (31 * hash + String.valueOf(key).charAt(i)) % size; //алгоритм Горнера
@@ -33,8 +33,12 @@ public class HashTable {
         return buckets;
     }
 
-    public int getSize() {
-        return size;
+    public int getTableSize() {
+        int tSize = 0;
+        for (List<Cell> bucket : buckets)
+            for (Cell cell : bucket)
+                tSize++;
+        return tSize;
     }
 
     public void push(int key) {
@@ -46,9 +50,10 @@ public class HashTable {
     public void delete(int key) {
         int hash = hash(key);
         if (buckets.get(hash).contains(new Cell(key))) {
-            for (Cell cell : buckets.get(hash)) {
+            for (int i = 0; i < buckets.get(hash).size(); i++) {
+                Cell cell = buckets.get(hash).get(i);
                 if (cell != null && cell.getKey() == key) {
-                    cell = null;
+                    buckets.get(hash).remove(i);
                     System.out.println("Удалил");
                     break;
                 }
@@ -58,6 +63,12 @@ public class HashTable {
         }
     }
 
+    /**
+     * ABC
+     *
+     * @param key TEST
+     * @return Буль
+     */
     public Boolean find(int key) {
         int hash = hash(key);
         if (buckets.get(hash).contains(new Cell(key))) {
@@ -75,6 +86,7 @@ public class HashTable {
         for (int i = 0; i < buckets.size(); i++)
             for (Cell cell : buckets.get(i))
                 System.out.println(i + " " + cell.getKey());
+        System.out.println();
     }
 
     public void clear() {
@@ -106,24 +118,6 @@ public class HashTable {
         System.out.println("Таблицы равны");
         return true;
     }
-
-/*
-    public Integer getHash(int key) {
-        int hash = hash(key);
-        while (table[hash] != null) {
-            if (table[hash].getKey() == key) {
-                System.out.println("Нашёл");
-                return hash;
-                //return table[hash];
-            }
-            hash++;
-            hash = hash % size;
-        }
-        System.out.println("Не нашёл по ходу");
-        return null;
-        //return null;
-    }
-*/
 }
 
 
