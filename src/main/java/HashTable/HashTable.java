@@ -1,35 +1,25 @@
 package HashTable;
 
-//import javax.annotation.Nullable;
-
-import com.sun.istack.internal.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HashTable {
-    @Nullable
-    private Cell[] table;
+
+    private List<List<Cell>> buckets;
     private int size;
 
-
-    /*public static void main(String[] args){
-        for (int i = 0;i<;i++){
-            table[i] = null;
+    public HashTable(int size) {
+        List<List<Cell>> buckets = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            buckets = insertLists(buckets, size);
         }
     }
 
-    public Cell[] init(){
-        for (int i = 0;i<size;i++){
-
+    private List<List<Cell>> insertLists(List<List<Cell>> newBucket, int size) {
+        for (int i = 0; i < size; i++) {
+            newBucket.add(new ArrayList<>());
         }
-        return table;
-    }*/
-
-    public HashTable(int size) {
-        this.size = size;
-        table = new Cell[size];
-        for (int i = 0; i < this.size; i++) {
-            table[i] = null;
-            //table[i] = new Cell(null, null);
-        }
+        return newBucket;
     }
 
     private int hash(int key) {
@@ -39,8 +29,8 @@ public class HashTable {
         return hash;
     }
 
-    public Cell[] getTable() {
-        return table;
+    public List<List<Cell>> getBuckets() {
+        return buckets;
     }
 
     public int getSize() {
@@ -49,26 +39,19 @@ public class HashTable {
 
     public void push(int key) {
         int hash = hash(key);
-        Cell cell = new Cell(key, hash);
-        while (table[hash].getKey() != null)  //решение коллизий методом линейного пробирования
-        {
-            hash++;
-            hash %= size;
-        }
-        table[hash] = cell;
+        Cell cell = new Cell(key);
+        buckets.get(hash).add(cell);
     }
 
     public void delete(int key) {
         int hash = hash(key);
-        if (find(key)) {
-            int counter = hash;
-            while (counter < size) {
-                if (table[counter].getKey() == key) {
-                    table[counter] = null;
+        if (buckets.get(hash).contains(new Cell(key))) {
+            for (Cell cell : buckets.get(hash)) {
+                if (cell != null && cell.getKey() == key) {
+                    cell = null;
                     System.out.println("Удалил");
                     break;
                 }
-                counter++;
             }
         } else {
             System.out.println("Удалять нечего");
@@ -77,56 +60,46 @@ public class HashTable {
 
     public Boolean find(int key) {
         int hash = hash(key);
-        try {
-            if (table[hash].getKey() != null && table[hash].getKey() == key) {
-                return true;
-            } else {
-                for (int i = 0; i < size; i++) {
-                    try {
-                        if (table[i].getKey() == key)
-                            return true;
-                    } catch (NullPointerException e) {
-
-                    }
-                }
+        if (buckets.get(hash).contains(new Cell(key))) {
+            return true;
+        } else {
+            for (Cell cell : buckets.get(hash)) {
+                if (cell != null && cell.getKey() == key)
+                    return true;
             }
-        } catch (NullPointerException e) {
-
         }
         return false;
     }
 
     public void print() {
-        for (int i = 0; i < size; i++)
-            if (table[i] != null)
-                System.out.println(i + " " + table[i].getKey());
+        for (int i = 0; i < buckets.size(); i++)
+            for (Cell cell : buckets.get(i))
+                System.out.println(i + " " + cell.getKey());
     }
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            this.table[i] = null;
+        for (List<Cell> bucks : buckets) {
+            bucks.clear();
         }
         System.out.println("Таблица очищена");
     }
 
     public Boolean isThisEmpty() {
-        int counter = 0;
-        boolean flag = true;
-        while (flag && this.getSize() > counter) {
-            if (table[counter].getKey() != null)
-                flag = false;
-            counter++;
+        for (List<Cell> bucks : buckets) {
+            if (!bucks.isEmpty()) {
+                return false;
+            }
         }
-        return flag;
+        return true;
     }
 
-    public Boolean hashEquals(HashTable otherTable) {
-        if (this.size != otherTable.size) {
+    public Boolean hashEquals(HashTable otherBucks) {
+        if (this.size != otherBucks.size) {
             System.out.println("Таблицы не равны");
             return false;
         }
         for (int i = 0; i < this.size; i++)
-            if (!this.table[i].cellEquals(otherTable.table[i])) {
+            if (!this.getBuckets().get(i).containsAll(otherBucks.getBuckets().get(i))) {
                 System.out.println("Таблицы не равны");
                 return false;
             }
