@@ -10,11 +10,21 @@ public class HashTable {
     private List<HashSet<Cell>> buckets;
     private int size;
 
+    /**
+     * Constructor of HashTable
+     * @param size Sets size of HashTable on creating
+     */
 
     public HashTable(int size) {
         this.size = size;
         this.buckets = insertSets(size);
     }
+
+    /**
+     * Inserting buckets in constructor HashTable
+     * @param size Number of buckets to create
+     * @return Returns completed List of buckets
+     */
 
     private List<HashSet<Cell>> insertSets(int size) {
         List<HashSet<Cell>> newBucket = new ArrayList<>();
@@ -24,17 +34,38 @@ public class HashTable {
         return newBucket;
     }
 
+    /**
+     * Sets bucket number to cell {@link Cell}
+     * @param a Receive hash code of Cell
+     * @return Returns generated bucket number based on hash code of Cell{@link Cell#getKey()}
+     */
+
     private int bucketNum(Integer a) {
         return a.hashCode() % size;
     }
+
+    /**
+     * Getter of HashTable.buckets
+     * @return Buckets of this HashTable
+     */
 
     public List<HashSet<Cell>> getBuckets() {
         return buckets;
     }
 
+    /**
+     *Getter of HashTable.size
+     * @return Returns number of buckets in this HashTable
+     */
+
     public int getTableSize() {
         return this.size;
     }
+
+    /**
+     * Number of Cells in all HashTable
+     * @return Returns number of Cells
+     */
 
     public int getBucketsSize() {
         int tSize = 0;
@@ -44,12 +75,22 @@ public class HashTable {
         return tSize;
     }
 
+    /**
+     * Expand size of HashTable (multiplies number of buckets by 2)
+     */
+
     private void expandSets() {
         for (int i = 0; i < size; i++) {
             buckets.add(new HashSet<>());
         }
         this.size = this.size * 2;
     }
+
+    /**
+     * Adding value in HashTable
+     * @param key Received value from user or else
+     * @return If adding succeeds returns True, else False
+     */
 
     public boolean push(int key) {
         int bucketNum = bucketNum(key);
@@ -72,6 +113,12 @@ public class HashTable {
         }
     }
 
+    /**
+     * Deleting value in HashTable
+     * @param key Received value from user or else
+     * @return If deleting succeeds returns True, else False
+     */
+
     public boolean delete(int key) {
         if (this.find(key)) {
             int bucketNum = bucketNum(key);
@@ -93,11 +140,11 @@ public class HashTable {
     }
 
     /**
-     * ABC
-     *
-     * @param key TEST
-     * @return Буль
+     * Searches for value in HashTable
+     * @param key Received value from user or else
+     * @return If the search succeeds returns True, else False
      */
+
     public Boolean find(int key) {
         int hash = bucketNum(key);
         if (buckets.get(hash).contains(new Cell(key))) {
@@ -114,6 +161,10 @@ public class HashTable {
         return false;
     }
 
+    /**
+     * Printing in console all Cells in HashTable (debugging info)
+     */
+
     public void print() {
         for (int i = 0; i < buckets.size(); i++)
             for (Cell cell : buckets.get(i))
@@ -121,12 +172,21 @@ public class HashTable {
         System.out.println();
     }
 
+    /**
+     * Clears HashTable
+     */
+
     public void clear() {
         for (HashSet<Cell> bucks : buckets) {
             bucks.clear();
         }
         System.out.println("Таблица очищена");
     }
+
+    /**
+     * Checking is HashTable empty
+     * @return If empty returns True, else False
+     */
 
     public Boolean isThisEmpty() {
         for (HashSet<Cell> bucks : buckets) {
@@ -137,10 +197,21 @@ public class HashTable {
         return true;
     }
 
+    /**
+     * Overriding of hashCode for HashTable
+     * @return Generated hashCode
+     */
+
     @Override
     public int hashCode() {
         return Objects.hash(buckets, size);
     }
+
+    /**
+     * Override of equals for HashTable
+     * @param obj Other HashTable
+     * @return If HashTables equals returns True, else False
+     */
 
     @Override
     public boolean equals(Object obj) {
