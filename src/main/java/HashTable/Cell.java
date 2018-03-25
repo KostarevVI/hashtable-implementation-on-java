@@ -15,18 +15,19 @@ public class Cell {
     }
 
     @Override
-    public boolean equals (Object obj){
-        if(obj == null)
+    public boolean equals(Object obj) {
+        if (obj == null)
             return false;
-        if(this.getClass() != obj.getClass())
+        if (this.getClass() != obj.getClass())
             return false;
-        if(obj == this)
+        if (obj == this)
             return true;
         Cell otherCell = (Cell) obj;
         return Objects.equals(this.getKey(), otherCell.getKey());
     }
 
     //не хочу писать тесты для этого :/
+
     @Override
     public int hashCode() {
         return key != null ? key.hashCode() : 0;

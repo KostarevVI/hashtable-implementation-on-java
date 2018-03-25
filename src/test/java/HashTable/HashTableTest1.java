@@ -12,7 +12,7 @@ public class HashTableTest1 {
     HashTable thirdTable = new HashTable(10);
 
     @After
-    public void after(){
+    public void after() {
         firstTable.clear();
         secondTable.clear();
         System.out.println("---------------------");
@@ -34,7 +34,18 @@ public class HashTableTest1 {
     public void delete() throws Exception {
         firstTable.push(1);
         firstTable.delete(1);
-        assertEquals(false, firstTable.find(1));
+        firstTable.push(13);
+        assertFalse(firstTable.find(1));
+        assertTrue(firstTable.delete(13));
+    }
+
+    @Test
+    public void getTableSize() throws Exception {
+        for (int i = 0; i < 12; i++) {
+            firstTable.push(13);
+            System.out.println(firstTable.getTableSize());
+        }
+        assertEquals(16, firstTable.getTableSize());
     }
 
     @Test
@@ -62,12 +73,12 @@ public class HashTableTest1 {
     }
 
     @Test
-    public void getTableSize() throws Exception{
-        for(int i=0;i<13;i++){
+    public void getBucketsSize() throws Exception {
+        for (int i = 0; i < 13; i++) {
             firstTable.push(i);
         }
         firstTable.print();
-        assertEquals(13,firstTable.getTableSize());
+        assertEquals(13, firstTable.getBucketsSize());
     }
 
     @Test
@@ -81,7 +92,8 @@ public class HashTableTest1 {
     }
 
     @Test
-    public void hashEquals() throws Exception {
+    public void equals() throws Exception {
+        int notHashtable = 13;
         firstTable.push(256);
         secondTable.push(256);
         firstTable.push(5);
@@ -91,30 +103,35 @@ public class HashTableTest1 {
         firstTable.push(526);
         firstTable.print();
         secondTable.print();
-        assertFalse(firstTable.hashEquals(thirdTable));
-        assertFalse(firstTable.hashEquals(secondTable));
+        assertFalse(firstTable.equals(thirdTable));
+        assertFalse(firstTable.equals(secondTable));
         firstTable.delete(526);
-        assertFalse(firstTable.hashEquals(secondTable));
+        assertFalse(firstTable.equals(secondTable));
         firstTable.delete(1);
         secondTable.delete(2);
         firstTable.print();
         secondTable.print();
-        assertTrue(firstTable.hashEquals(secondTable));
+        assertTrue(firstTable.equals(secondTable));
+        assertFalse(firstTable.equals(null));
+        assertFalse(firstTable.equals(notHashtable));
     }
 
-    @Test
-    public void equals() throws Exception {
-        Cell cell = new Cell(13);
-        Cell secondCell = new Cell(0);
-        Cell thirdCell = new Cell(13);
-        int intCell = 13;
-        Cell voidCell = null;
-        Cell voidInsideCell = new Cell(null);
-        assertFalse(cell.equals(intCell));
-        assertFalse(cell.equals(voidCell));
-        assertFalse(cell.equals(voidInsideCell));
-        assertTrue(cell.equals(cell));
-        assertFalse(cell.equals(secondCell));
-        assertTrue(cell.equals(thirdCell));
+    //Как сделать два equals теста в одном тестовом классе? К какой магии прибегать?
+
+    class CellTest extends HashTableTest1 {
+        @Test
+        public void equals() throws Exception {
+            Cell cell = new Cell(13);
+            Cell secondCell = new Cell(0);
+            Cell thirdCell = new Cell(13);
+            int notCell = 13;
+            Cell voidCell = null;
+            assertFalse(cell.equals(notCell));
+            assertFalse(cell.equals(voidCell));
+            assertTrue(cell.equals(cell));
+            assertFalse(cell.equals(secondCell));
+            assertTrue(cell.equals(thirdCell));
+            assertFalse(cell.equals(null));
+        }
     }
 }
