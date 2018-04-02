@@ -12,6 +12,7 @@ public class HashTable {
 
     /**
      * Constructor of HashTable
+     *
      * @param size Sets size of HashTable on creating
      */
 
@@ -22,6 +23,7 @@ public class HashTable {
 
     /**
      * Inserting buckets in constructor HashTable
+     *
      * @param size Number of buckets to create
      * @return Returns completed List of buckets
      */
@@ -36,6 +38,7 @@ public class HashTable {
 
     /**
      * Sets bucket number to cell {@link Cell}
+     *
      * @param a Receive hash code of Cell
      * @return Returns generated bucket number based on hash code of Cell{@link Cell#getKey()}
      */
@@ -46,6 +49,7 @@ public class HashTable {
 
     /**
      * Getter of HashTable.buckets
+     *
      * @return Buckets of this HashTable
      */
 
@@ -54,7 +58,8 @@ public class HashTable {
     }
 
     /**
-     *Getter of HashTable.size
+     * Getter of HashTable.size
+     *
      * @return Returns number of buckets in this HashTable
      */
 
@@ -64,6 +69,7 @@ public class HashTable {
 
     /**
      * Number of Cells in all HashTable
+     *
      * @return Returns number of Cells
      */
 
@@ -83,16 +89,62 @@ public class HashTable {
         for (int i = 0; i < size; i++) {
             buckets.add(new HashSet<>());
         }
-        this.size = this.size * 2;
+        this.size *= 2;
+    }
+
+    /**
+     * Converting HashTable to List for Rehash method
+     *
+     * @return List with all Cells from HashTable
+     */
+
+    private ArrayList<Cell> tableToList() {
+        ArrayList<Cell> list = new ArrayList<>();
+        for (HashSet<Cell> bucket : buckets) {
+            list.addAll(bucket);
+        }
+        return list;
+    }
+
+    /**
+     * Increases the capacity of and internally reorganizes this HashTable
+     */
+
+    private void rehash() {
+        ArrayList<Cell> list = tableToList();
+        this.clear();
+        this.expandSets();
+        for (Cell cell : list) {
+            for (int i = 0; i < cell.getAmount(); i++) {
+                this.push(cell.getKey());
+            }
+        }
     }
 
     /**
      * Adding value in HashTable
+     *
      * @param key Received value from user or else
      * @return If adding succeeds returns True, else False
      */
 
     public boolean push(int key) {
+        int bucketNum = bucketNum(key);
+        Cell cell = new Cell(key);
+        if (buckets.get(bucketNum).contains(cell)) {
+            //щас будет выглядеть страшно, но зато работает (надеюсь)
+            buckets.get(bucketNum).stream().filter(data -> Objects.equals(cell, data)).findFirst().get().incAmount();
+            return true;
+        }
+        if (buckets.get(bucketNum).size() + 1 > size) { //заменяет назначаемую переменную loadFactor в оригинальной хэщтабле
+            this.rehash();
+        }
+        buckets.get(bucketNum).add(cell);
+        return true;
+    }
+
+    /*
+        public boolean push(int key) {
         int bucketNum = bucketNum(key);
         Cell cell = new Cell(key);
         if (!buckets.get(bucketNum).contains(cell)) {
@@ -112,9 +164,11 @@ public class HashTable {
             return true;
         }
     }
+*/
 
     /**
      * Deleting value in HashTable
+     *
      * @param key Received value from user or else
      * @return If deleting succeeds returns True, else False
      */
@@ -127,6 +181,11 @@ public class HashTable {
                 if (buckets.get(bucketNum).contains(new Cell(key)))
                     for (Cell cell : buckets.get(bucketNum))
                         if (cell != null && cell.getKey() == key) {
+                            if (cell.getAmount() > 1) {
+                                cell.decAmount();
+                                System.out.println("Уменьшил на 1");
+                                return true;
+                            }
                             buckets.get(bucketNum).remove(cell);
                             System.out.println("Удалил");
                             return true;
@@ -141,6 +200,7 @@ public class HashTable {
 
     /**
      * Searches for value in HashTable
+     *
      * @param key Received value from user or else
      * @return If the search succeeds returns True, else False
      */
@@ -168,7 +228,7 @@ public class HashTable {
     public void print() {
         for (int i = 0; i < buckets.size(); i++)
             for (Cell cell : buckets.get(i))
-                System.out.println(i + " " + cell.getKey());
+                System.out.println(i + " Key: " + cell.getKey() + " Amount:" + cell.getAmount());
         System.out.println();
     }
 
@@ -185,6 +245,7 @@ public class HashTable {
 
     /**
      * Checking is HashTable empty
+     *
      * @return If empty returns True, else False
      */
 
@@ -199,6 +260,7 @@ public class HashTable {
 
     /**
      * Overriding of hashCode for HashTable
+     *
      * @return Generated hashCode
      */
 
@@ -209,6 +271,7 @@ public class HashTable {
 
     /**
      * Override of equals for HashTable
+     *
      * @param obj Other HashTable
      * @return If HashTables equals returns True, else False
      */

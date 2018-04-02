@@ -5,18 +5,22 @@ import java.util.Objects;
 public class Cell {
 
     private Integer key;
+    private Integer amount; //да, я хочу хранить кол-во значений, ведь это моя таблица и я её сделал
 
     /**
      * Constructor of Cell
+     *
      * @param key Received value
      */
 
     public Cell(Integer key) {
         this.key = key;
+        this.amount = 1;
     }
 
     /**
      * Getter of key in Cell
+     *
      * @return Key in Cell
      */
 
@@ -25,7 +29,35 @@ public class Cell {
     }
 
     /**
+     * Increase amount of this value in Cell
+     */
+
+    public void incAmount() {
+        this.amount++;
+    }
+
+    /**
+     * Decrease amount of this value in Cell
+     */
+
+    public void decAmount() {
+        if (amount > 0)
+            this.amount--;
+    }
+
+    /**
+     * Getter of key in Cell
+     *
+     * @return Amount of values in Cell
+     */
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    /**
      * Override of equals for Cell
+     *
      * @param obj Other Cell
      * @return If Cells equals returns True, else False
      */
@@ -46,6 +78,7 @@ public class Cell {
 
     /**
      * Override of hashCode for Cell
+     *
      * @return Generated hashCode
      */
 
@@ -56,6 +89,7 @@ public class Cell {
 
     /**
      * Override of toString for Cell
+     *
      * @return String with key value
      */
 

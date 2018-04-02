@@ -41,9 +41,8 @@ public class HashTableTest1 {
 
     @Test
     public void getTableSize() throws Exception {
-        for (int i = 0; i < 12; i++) {
-            firstTable.push(13);
-            System.out.println(firstTable.getTableSize());
+        for (int i = 0; i < 100; i++) {
+            firstTable.push(i);
         }
         assertEquals(16, firstTable.getTableSize());
     }
@@ -114,6 +113,31 @@ public class HashTableTest1 {
         assertTrue(firstTable.equals(secondTable));
         assertFalse(firstTable.equals(null));
         assertFalse(firstTable.equals(notHashtable));
+    }
+
+    @Test
+    public void rehash() throws Exception {
+        for (int i = 0; i < 17; i++)
+            firstTable.push(i);
+        firstTable.print();
+        assertTrue(firstTable.find(1));
+        assertEquals(8, firstTable.getTableSize());
+    }
+
+    @Test
+    public void incAmount() throws Exception {
+        Cell cell = new Cell(1);
+        cell.incAmount();
+        assertEquals("2", cell.getAmount().toString());
+    }
+
+    @Test
+    public void decAmount() throws Exception {
+        Cell cell = new Cell(2);
+        cell.decAmount();
+        assertEquals("0", cell.getAmount().toString());
+        cell.decAmount();
+        assertEquals("0", cell.getAmount().toString());
     }
 
     //Как сделать два equals теста в одном тестовом классе? К какой магии прибегать?
