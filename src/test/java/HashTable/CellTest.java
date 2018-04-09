@@ -8,6 +8,8 @@ public class CellTest {
 
     @Test
     public void getKey() {
+        Cell cell = new Cell(1);
+        assertEquals("1", cell.getKey().toString());
     }
 
     @Test
@@ -43,5 +45,18 @@ public class CellTest {
         assertFalse(cell.equals(secondCell));
         assertTrue(cell.equals(thirdCell));
         assertFalse(cell.equals(null));
+    }
+
+    @Test
+    public void toStringTest() {
+        Cell cell = new Cell(13);
+        assertEquals("Cell{key=13 amount=1}", cell.toString());
+        cell.incAmount();
+        assertEquals("Cell{key=13 amount=2}", cell.toString());
+        cell.decAmount();
+        cell.decAmount();
+        assertEquals("Cell{key=13 amount=0}", cell.toString());
+        cell.decAmount();
+        assertEquals("Cell{key=13 amount=0}", cell.toString());
     }
 }

@@ -263,7 +263,7 @@ public class HashTable {
             return false;
         }
         for (int i = 0; i < this.buckets.size(); i++)
-            if (!Objects.equals(this.getBuckets().get(i),otherBucks.getBuckets().get(i))) {
+            if (!Objects.equals(this.getBuckets().get(i), otherBucks.getBuckets().get(i))) {
                 System.out.println("Таблицы не равны");
                 return false;
             }

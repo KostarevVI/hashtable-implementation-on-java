@@ -97,6 +97,7 @@ public class Cell {
     public String toString() {
         return "Cell{" +
                 "key=" + key +
+                " amount=" + amount +
                 '}';
     }
 }
