@@ -8,7 +8,6 @@ import java.util.Objects;
 public class HashTable {
 
     private List<HashSet<Cell>> buckets;
-    private int size;
 
     /**
      * Constructor of HashTable
@@ -17,7 +16,6 @@ public class HashTable {
      */
 
     public HashTable(int size) {
-        this.size = size;
         this.buckets = insertSets(size);
     }
 
@@ -44,7 +42,7 @@ public class HashTable {
      */
 
     private int bucketNum(Integer a) {
-        return a.hashCode() % size;
+        return a.hashCode() % this.buckets.size();
     }
 
     /**
@@ -64,7 +62,7 @@ public class HashTable {
      */
 
     public int getTableSize() {
-        return this.size;
+        return this.buckets.size();
     }
 
     /**
@@ -86,10 +84,10 @@ public class HashTable {
      */
 
     private void expandSets() {
-        for (int i = 0; i < size; i++) {
-            buckets.add(new HashSet<>());
+        int sizeOfBuckets = this.buckets.size();
+        for (int i = 0; i < sizeOfBuckets; i++) {
+            this.buckets.add(new HashSet<>());
         }
-        this.size *= 2;
     }
 
     /**
@@ -136,35 +134,13 @@ public class HashTable {
             buckets.get(bucketNum).stream().filter(data -> Objects.equals(cell, data)).findFirst().get().incAmount();
             return true;
         }
-        if (buckets.get(bucketNum).size() + 1 > size) { //заменяет назначаемую переменную loadFactor в оригинальной хэщтабле
+        int loadFactor = buckets.get(bucketNum).size() + 1;
+        if (loadFactor > this.buckets.size()) { //лучше?)
             this.rehash();
         }
         buckets.get(bucketNum).add(cell);
         return true;
     }
-
-    /*
-        public boolean push(int key) {
-        int bucketNum = bucketNum(key);
-        Cell cell = new Cell(key);
-        if (!buckets.get(bucketNum).contains(cell)) {
-            buckets.get(bucketNum).add(cell);
-            return true;
-        } else {
-            int counter = 0;
-            while (counter < size) {
-                if (counter != bucketNum && !buckets.get(counter).contains(cell)) {
-                    buckets.get(counter).add(cell);
-                    return true;
-                }
-                counter++;
-            }
-            this.expandSets();
-            buckets.get(bucketNum + 1).add(cell);
-            return true;
-        }
-    }
-*/
 
     /**
      * Deleting value in HashTable
@@ -177,10 +153,11 @@ public class HashTable {
         if (this.find(key)) {
             int bucketNum = bucketNum(key);
             int counter = 0;
-            while (counter < size) {
+            Cell targetCell = new Cell(key);
+            while (counter < this.buckets.size()) {
                 if (buckets.get(bucketNum).contains(new Cell(key)))
                     for (Cell cell : buckets.get(bucketNum))
-                        if (cell != null && cell.getKey() == key) {
+                        if (cell.equals(targetCell)) {
                             if (cell.getAmount() > 1) {
                                 cell.decAmount();
                                 System.out.println("Уменьшил на 1");
@@ -190,7 +167,7 @@ public class HashTable {
                             System.out.println("Удалил");
                             return true;
                         }
-                bucketNum = (bucketNum + 1) % size;
+                bucketNum = (bucketNum + 1) % this.buckets.size();
                 counter++;
             }
         }
@@ -211,7 +188,7 @@ public class HashTable {
             return true;
         } else {
             int counter = 0;
-            while (counter < size)
+            while (counter < this.buckets.size())
                 for (HashSet<Cell> bucket : buckets) {
                     if (bucket.contains(new Cell(key)))
                         return true;
@@ -266,7 +243,7 @@ public class HashTable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(buckets, size);
+        return Objects.hash(buckets, this.buckets.size());
     }
 
     /**
@@ -281,12 +258,12 @@ public class HashTable {
         if (obj == null || this.getClass() != obj.getClass())
             return false;
         HashTable otherBucks = (HashTable) obj;
-        if (this.size != otherBucks.size) {
+        if (this.getBucketsSize() != otherBucks.getBucketsSize()) {
             System.out.println("Таблицы не равны");
             return false;
         }
-        for (int i = 0; i < this.size; i++)
-            if (!this.getBuckets().get(i).containsAll(otherBucks.getBuckets().get(i))) {
+        for (int i = 0; i < this.buckets.size(); i++)
+            if (!Objects.equals(this.getBuckets().get(i),otherBucks.getBuckets().get(i))) {
                 System.out.println("Таблицы не равны");
                 return false;
             }

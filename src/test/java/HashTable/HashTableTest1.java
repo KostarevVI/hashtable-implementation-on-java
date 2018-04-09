@@ -98,16 +98,16 @@ public class HashTableTest1 {
         firstTable.push(5);
         secondTable.push(5);
         firstTable.push(1);
-        secondTable.push(2);
-        firstTable.push(526);
+        secondTable.push(1);
+        firstTable.push(2);
         firstTable.print();
         secondTable.print();
         assertFalse(firstTable.equals(thirdTable));
-        assertFalse(firstTable.equals(secondTable));
-        firstTable.delete(526);
+        assertFalse(firstTable.equals(secondTable)); //первая таблица содержит все элементы второй и что-то ещё
+        secondTable.delete(1);
         assertFalse(firstTable.equals(secondTable));
         firstTable.delete(1);
-        secondTable.delete(2);
+        firstTable.delete(2);
         firstTable.print();
         secondTable.print();
         assertTrue(firstTable.equals(secondTable));
@@ -122,40 +122,5 @@ public class HashTableTest1 {
         firstTable.print();
         assertTrue(firstTable.find(1));
         assertEquals(8, firstTable.getTableSize());
-    }
-
-    @Test
-    public void incAmount() throws Exception {
-        Cell cell = new Cell(1);
-        cell.incAmount();
-        assertEquals("2", cell.getAmount().toString());
-    }
-
-    @Test
-    public void decAmount() throws Exception {
-        Cell cell = new Cell(2);
-        cell.decAmount();
-        assertEquals("0", cell.getAmount().toString());
-        cell.decAmount();
-        assertEquals("0", cell.getAmount().toString());
-    }
-
-    //Как сделать два equals теста в одном тестовом классе? К какой магии прибегать?
-
-    class CellTest extends HashTableTest1 {
-        @Test
-        public void equals() throws Exception {
-            Cell cell = new Cell(13);
-            Cell secondCell = new Cell(0);
-            Cell thirdCell = new Cell(13);
-            int notCell = 13;
-            Cell voidCell = null;
-            assertFalse(cell.equals(notCell));
-            assertFalse(cell.equals(voidCell));
-            assertTrue(cell.equals(cell));
-            assertFalse(cell.equals(secondCell));
-            assertTrue(cell.equals(thirdCell));
-            assertFalse(cell.equals(null));
-        }
     }
 }
