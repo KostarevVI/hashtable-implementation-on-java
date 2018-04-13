@@ -117,7 +117,7 @@ public class HashTableTest1 {
 
     @Test
     public void rehash() throws Exception {
-        for (int i = 0; i < 17; i++)
+        for (int i = 0; i < 50; i++)
             firstTable.push(i);
         firstTable.print();
         assertTrue(firstTable.find(1));

@@ -134,7 +134,7 @@ public class HashTable {
             buckets.get(bucketNum).stream().filter(data -> Objects.equals(cell, data)).findFirst().get().incAmount();
             return true;
         }
-        int loadFactor = buckets.get(bucketNum).size() + 1;
+        int loadFactor = this.getBucketsSize() / this.getTableSize();
         if (loadFactor > this.buckets.size()) { //лучше?)
             this.rehash();
         }
@@ -152,24 +152,19 @@ public class HashTable {
     public boolean delete(int key) {
         if (this.find(key)) {
             int bucketNum = bucketNum(key);
-            int counter = 0;
             Cell targetCell = new Cell(key);
-            while (counter < this.buckets.size()) {
-                if (buckets.get(bucketNum).contains(new Cell(key)))
-                    for (Cell cell : buckets.get(bucketNum))
-                        if (cell.equals(targetCell)) {
-                            if (cell.getAmount() > 1) {
-                                cell.decAmount();
-                                System.out.println("Уменьшил на 1");
-                                return true;
-                            }
-                            buckets.get(bucketNum).remove(cell);
-                            System.out.println("Удалил");
+            if (buckets.get(bucketNum).contains(new Cell(key)))
+                for (Cell cell : buckets.get(bucketNum))
+                    if (cell.equals(targetCell)) {
+                        if (cell.getAmount() > 1) {
+                            cell.decAmount();
+                            System.out.println("Уменьшил на 1");
                             return true;
                         }
-                bucketNum = (bucketNum + 1) % this.buckets.size();
-                counter++;
-            }
+                        buckets.get(bucketNum).remove(cell);
+                        System.out.println("Удалил");
+                        return true;
+                    }
         }
         System.out.println("Удалять нечего");
         return false;
@@ -184,18 +179,7 @@ public class HashTable {
 
     public Boolean find(int key) {
         int hash = bucketNum(key);
-        if (buckets.get(hash).contains(new Cell(key))) {
-            return true;
-        } else {
-            int counter = 0;
-            while (counter < this.buckets.size())
-                for (HashSet<Cell> bucket : buckets) {
-                    if (bucket.contains(new Cell(key)))
-                        return true;
-                    counter++;
-                }
-        }
-        return false;
+        return buckets.get(hash).contains(new Cell(key));
     }
 
     /**
